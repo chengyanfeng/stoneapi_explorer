@@ -1,0 +1,160 @@
+<html lang="en" data-ng-app="BlocksApp" class="ng-scope"><!--<![endif]--><!-- BEGIN HEAD -->
+
+{{ .HtmlHead}}
+<body ng-controller="MainController" class="page-header-fixed ng-scope"
+      ng-class="{'page-content-white': settings.layout.pageContentWhite,'page-container-bg-solid': settings.layout.pageBodySolid}">
+<!-- BEGIN PAGE SPINNER -->
+<div ng-spinner-bar="" class="page-spinner-bar hide">
+    <img src="/img/loading.gif">
+</div>
+<!-- END PAGE SPINNER -->
+<!-- BEGIN HEADER -->
+<div class="page-wrapper">
+    <div class="page-wrapper-row">
+        <div class="page-wrapper-top">
+            <!-- BEGIN HEADER -->
+            <!-- ngInclude: 'tpl/header.html' -->
+            <div data-ng-include="'tpl/header.html'" data-ng-controller="HeaderController" class="page-header ng-scope">
+                <!-- BEGIN HEADER TOP -->
+                <div class="page-header-top ng-scope">
+                    <div class="container">
+                        <!-- BEGIN LOGO -->
+                        <div class="page-logo">
+                            <a href="/">
+                                <img ng-show="settings.logo" src="/static/img/explorer-logo.png" alt="logo"
+                                     class="logo-default">
+                            </a>
+                        </div>
+                        <!-- END LOGO -->
+                        <!-- BEGIN RESPONSIVE MENU TOGGLER -->
+                        <a href="javascript:;" class="menu-toggler btn btn-sm green-haze btn-outline">菜单</a>
+                        <!-- END RESPONSIVE MENU TOGGLER -->
+                        <!-- BEGIN TOP NAVIGATION MENU -->
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav pull-right">
+                                <li class="dropdown">
+                                    <form name="form.searchForm" class="search-form ng-pristine ng-valid">
+                                        <div class="input-group">
+                                            <input type="text" name="explorerSearch" id="findData"
+                                                   class="form-control ng-pristine ng-untouched ng-valid"
+                                                   placeholder="搜索  Address / Txhash / BlockNum / BlockHash"
+                                                   ng-model="form.searchInput"
+                                                   ng-keyup="$event.keyCode == 13 ? searchQuery(form.searchInput) : null">
+                                            <span class="input-group-btn">
+                                <a class="btn searchIcon" onclick="finde()">
+                                    <i class="icon-magnifier"></i>
+                                </a>
+                            </span>
+                                        </div>
+                                    </form>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <!-- END TOP NAVIGATION MENU -->
+                    </div>
+                </div>
+
+                <div class="page-header-menu ng-scope" style="display: block;">
+                    <div class="container">
+
+                        <!-- BEGIN MEGA MENU -->
+                        <div class="hor-menu hor-menu-light">
+                            <ul class="nav navbar-nav">
+                                <li class="active">
+                                    <a href="/">主页</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                        <!-- END MEGA MENU -->
+                    </div>
+                </div>
+                <!-- END HEADER INNER -->
+            </div>
+            <!-- END HEADER -->
+        </div>
+    </div>
+    <div class="page-wrapper-row full-height">
+        <div class="page-wrapper-middle">
+            <!-- BEGIN CONTAINER -->
+            <div class="page-container">
+                <!-- BEGIN PAGE HEAD -->
+                <!-- ngInclude: 'tpl/page-head.html' -->
+                <div ng-show="!isHome" data-ng-include="'tpl/page-head.html'" data-ng-controller="PageHeadController"
+                     class="page-head ng-scope ng-hide">
+                    <div class="container ng-scope">
+                        <!-- BEGIN PAGE TITLE -->
+                        <div class="page-title">
+                            <h1>
+                                <span data-ng-bind="$state.current.data.pageTitle" class="ng-binding">Blockchain Explorer</span>
+                                <small data-ng-bind="$state.current.data.pageSubTitle" class="ng-binding"></small>
+                            </h1>
+                        </div>
+                        <!-- END PAGE TITLE -->
+                    </div>
+                </div>
+                <!-- END PAGE HEAD -->
+                <!-- BEGIN PAGE CONTENT -->
+                <div class="page-content">
+                    <div class="container">
+                        <!-- BEGIN ACTUAL CONTENT -->
+                        <!-- uiView:  -->
+                        <div ui-view="" class="fade-in-up ng-scope"><!--<site-notes></site-notes>-->
+                            <!--<simple-summary-stats></simple-summary-stats>-->
+                            <!-- summary-stats></summary-stats -->
+
+                            <div class="row ng-scope">
+                                <div class="col-md-6 col-sm-6" style="margin-left: 10%;width:80%">
+                                    <!-- BEGIN PORTLET-->
+                                    <div class="portlet light">
+                                        <div class="portlet-title">
+                                            <div class="caption caption-md">
+                                                <i class="fa fa-cubes font-red"></i>
+                                                <span class="caption-subject font-red bold uppercase">区块</span>
+                                            </div>
+                                            <div class="actions">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-med" href="javascript:location.reload();"><i
+                                                            class="fa fa-refresh"
+                                                            ng-class="{'fa-spin': blockLoading}"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      {{ .LayoutContent}}
+                                        <div style="text-align:right">
+                                        {{.page|str2html}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    $(function () {
+        setInterval(function () {
+            finde();
+        }, 60000);
+    });
+
+    var finde = function search() {
+        explorerSearch = $("#findData").val()
+        window.location.href = "/?explorerSearch=" + explorerSearch
+    }
+
+
+
+
+</script>
+</html>

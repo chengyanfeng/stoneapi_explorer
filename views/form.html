@@ -1,0 +1,19 @@
+<div class="portlet-body">
+    <div class="todo-tasklist scrollable">
+        <!-- ngRepeat: t in latest_blocks track by $index -->
+    {{if  .datalist}}
+    {{ range .datalist}}
+        <div class="todo-tasklist-item item-border-green row ng-scope">
+            <div class="col-sm-12">
+                                                        <span class="todo-tasklist-item-title"><a href="/block/373"
+                                                                                                  class="ng-binding">373</a></span><br>
+                <span class="todo-tasklist-date ng-binding">2018-07-20 15:17:37 </span>
+                <span class="todo-tasklist-date ng-binding">{{.Data}} </span>
+                <span class="todo-tasklist-date ng-binding">{{.Data}} </span>
+            </div>
+        </div>
+    {{end}}
+    {{ end }}
+    </div>
+
+</div>
