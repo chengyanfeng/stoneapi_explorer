@@ -32,7 +32,7 @@
                         <!-- BEGIN TOP NAVIGATION MENU -->
                         <div class="top-menu">
                             <ul class="nav navbar-nav pull-right">
-                                <li class="dropdown">
+                            {{/* <li class="dropdown">
                                     <form name="form.searchForm" class="search-form ng-pristine ng-valid">
                                         <div class="input-group">
                                             <input type="text" name="explorerSearch" id="findData"
@@ -47,7 +47,7 @@
                             </span>
                                         </div>
                                     </form>
-                                </li>
+                                </li>*/}}
 
 
                             </ul>
@@ -78,6 +78,7 @@
         </div>
     </div>
     <div class="page-wrapper-row full-height">
+
         <div class="page-wrapper-middle">
             <div class="page-container">
                 <div ng-show="!isHome" data-ng-include="'tpl/page-head.html'" data-ng-controller="PageHeadController"
@@ -94,7 +95,39 @@
                 <div class="page-content">
                     <div class="container">
                         <div ui-view="" class="fade-in-up ng-scope">
+                            <span class="todo-tasklist-date ng-binding" style="margin-left: 13%;">TXIDS请以逗号分隔</span>
                             <div class="row ng-scope">
+
+                                <form name="form" class="search-form ng-pristine ng-valid"
+                                      style="width: 38%;float:left;margin-left: 13%;">
+                                    <div class="input-group" style="width:100%">
+                                        <textarea type="text" name="explorerSearch" id="findDataText"
+                                                  class="form-control "
+                                                  placeholder="搜索txdis，多个请以逗号分隔"
+                                                  style="height:200px;resize:none;overflow:scroll">
+                                        </textarea>
+                                        <span class="input-group-btn">
+                                <a class="btn searchIcon" onclick="findeData()">
+                                    查询
+                                    <i class="glyphicon glyphicon-arrow-right"></i>
+                                </a>
+                            </span>
+                                    </div>
+
+                                </form>
+                                <form name="form.searchForm" class="search-form ng-pristine ng-valid"
+                                      style="width: 35%;margin-right: 13%;">
+                                    <div class="input-group" style="width:100%">
+                                        <a type="text" name="explorerSearch" id="showData"
+                                           class="form-control ng-pristine ng-untouched ng-valid"
+                                           placeholder="搜索  Address / Txhash / BlockNum / BlockHash"
+                                           ng-model="form.searchInput"
+                                           ng-keyup="$event.keyCode == 13 ? searchQuery(form.searchInput) : null"
+                                           style="height:200px;resize:none;">
+                                        </a>
+
+                                    </div>
+                                </form>
                                 <div class="col-md-6 col-sm-6" style="margin-left: 10%;width:80%">
                                     <div class="portlet light">
                                         <div class="portlet-title">
@@ -133,14 +166,20 @@
     $(function () {
         ajaxget(1, "")
         setInterval(function () {
-           /* ajaxget(N, sech)*/
-        }, 6000);
+            ajaxget(1, "")
+        }, 60000);
     });
     var finde = function search() {
         explorerSearch = $("#findData").val()
         ajaxget(1, explorerSearch)
     }
-
+    var findeData = function searchGet() {
+        var txids = $("#findDataText").val().trim().split(",")
+        var data = {
+            "txids": txids
+        }
+        ajaxPost(data)
+    }
 
 </script>
 <script type="text/javascript">
@@ -165,9 +204,9 @@
             success: function (result) {
                 var datalist = $("#datalist")
                 datalist.html("")
-                for (i = result.data.length-1; i >0 ; i--) {
-
-                    var htmldata = htmlDatalist(result.data[i].data,result.data[i].number)
+                for (i = result.data.length - 1; i > 0; i--) {
+                    var arr = result.data[i].TxIds.split(',');
+                    var htmldata = htmlDatalist(result.data[i].data, result.data[i].number, arr[0])
                     datalist.append(htmldata)
                 }
                 num = parseInt(result.culpage)
@@ -180,17 +219,33 @@
             }
         });
     }
+    function ajaxPost(data) {
 
-    function htmlDatalist(data,number) {
+        $.ajax({
+            type: "post",
+            async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: "http://chromeapi.genyuanlian.com:9005/api/txquery",    //请求发送到TestServlet处
+            data: data,
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                console.log(result.data.data)
+                $("#showData").html(result.data.confirmations + "</br>" + result.data.data + "</br>" + result.data.time)
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("获取数据失败!");
+            }
+        });
+    }
+    function htmlDatalist(data, number, txids) {
 
         var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" + ">" +
                 "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
-                "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">"+ number +"</a></span><br>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + ">2018-07-20 15:17:37 </span>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style="+"\""+"text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;"+"\""+ "title="+"\""+data+"\""+ ">" + data + "</span>" + "</div> </div>"
+                "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">" + number + "</a></span><br>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style=" + "\"" + "text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;" + "\"" + "title=" + "\"" + data + "\"" + ">" + data + "</span>" + "</div> </div>"
         return htmllist
     }
-
     function PagerHtml(totalcount, page_size, curpage, mpurl, number) {
         if (number % 2 == 0) {
             $("#pagehtml").html("")
@@ -198,7 +253,7 @@
             return
         }
         var totalpage = 0
-        totalpage=Math.ceil(totalcount/page_size)
+        totalpage = Math.ceil(totalcount / page_size)
         //如果返回为空，那就返回为空
         if (totalcount == 0) {
             $("#pagehtml").html("")
@@ -284,6 +339,5 @@
         $("#pagehtml").html("")
         $("#pagehtml").append(html)
     }
-
 </script>
 </html>

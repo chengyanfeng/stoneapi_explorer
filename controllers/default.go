@@ -33,7 +33,7 @@ func (c *MainController) Getdata() {
 	}
 
 	totalcount := util.D("uploads",mongp).Find(queryp).Count()
-	datalist := util.D("uploads").Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
+	datalist := util.D("uploads",mongp).Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
 
 	for k, v := range *datalist {
 		v.Number = (totalcount - (curlpage)*page_size + k + 1)
