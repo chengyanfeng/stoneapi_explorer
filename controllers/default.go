@@ -1,7 +1,8 @@
 package controllers
 
 import (
-	"redfind/util"
+	"lian/util"
+	"lian/models"
 )
 
 type MainController struct {
@@ -11,10 +12,13 @@ type MainController struct {
 var queryp = util.P{}
 
 func (c *MainController) Get() {
-	//下面显示多少个页码框，一定要用奇数，3，5，7
-	number := 5
-	//page_size
+	c.TplName = "form.html"
+
+}
+//获取数据分页
+func (c *MainController) Getdata() {
 	page_size := 10
+	reurnDataList := &[]models.Node{}
 	explorerSearch := c.GetString("explorerSearch")
 	page := c.GetString("page")
 	curlpage := util.ToInt(page)
@@ -26,10 +30,15 @@ func (c *MainController) Get() {
 	} else {
 		delete(queryp, "data")
 	}
-	datalist := util.D("test").Find(queryp).Page((curlpage-1)*page_size, page_size-1).AllData()
-	totalcount := util.D("test").Find(queryp).Count()
-	c.Data["page"] = PagerHtml(totalcount, page_size, curlpage, explorerSearch, number)
-	c.Data["datalist"] = datalist
-	c.TplName = "form.html"
+	totalcount := util.D("uploads").Find(queryp).Count()
+	datalist := util.D("uploads").Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
+
+	for k, v := range *datalist {
+		v.Number = (totalcount - (curlpage)*page_size + k + 1)
+		*reurnDataList = append(*reurnDataList, v)
+	}
+	c.Data["json"] = map[string]interface{}{"totalcount": totalcount, "data": reurnDataList, "culpage": page}
+	c.ServeJSON()
+	return
 
 }

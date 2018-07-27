@@ -79,36 +79,23 @@
     </div>
     <div class="page-wrapper-row full-height">
         <div class="page-wrapper-middle">
-            <!-- BEGIN CONTAINER -->
             <div class="page-container">
-                <!-- BEGIN PAGE HEAD -->
-                <!-- ngInclude: 'tpl/page-head.html' -->
                 <div ng-show="!isHome" data-ng-include="'tpl/page-head.html'" data-ng-controller="PageHeadController"
                      class="page-head ng-scope ng-hide">
                     <div class="container ng-scope">
-                        <!-- BEGIN PAGE TITLE -->
                         <div class="page-title">
                             <h1>
                                 <span data-ng-bind="$state.current.data.pageTitle" class="ng-binding">Blockchain Explorer</span>
                                 <small data-ng-bind="$state.current.data.pageSubTitle" class="ng-binding"></small>
                             </h1>
                         </div>
-                        <!-- END PAGE TITLE -->
                     </div>
                 </div>
-                <!-- END PAGE HEAD -->
-                <!-- BEGIN PAGE CONTENT -->
                 <div class="page-content">
                     <div class="container">
-                        <!-- BEGIN ACTUAL CONTENT -->
-                        <!-- uiView:  -->
-                        <div ui-view="" class="fade-in-up ng-scope"><!--<site-notes></site-notes>-->
-                            <!--<simple-summary-stats></simple-summary-stats>-->
-                            <!-- summary-stats></summary-stats -->
-
+                        <div ui-view="" class="fade-in-up ng-scope">
                             <div class="row ng-scope">
                                 <div class="col-md-6 col-sm-6" style="margin-left: 10%;width:80%">
-                                    <!-- BEGIN PORTLET-->
                                     <div class="portlet light">
                                         <div class="portlet-title">
                                             <div class="caption caption-md">
@@ -124,9 +111,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                      {{ .LayoutContent}}
-                                        <div style="text-align:right">
-                                        {{.page|str2html}}
+                                    {{ .LayoutContent}}
+                                        <div style="text-align:right" id="pagehtml">
                                         </div>
                                     </div>
                                 </div>
@@ -142,19 +128,162 @@
 
 </body>
 <script type="text/javascript">
+    var N = 0
+    var sech = ""
     $(function () {
+        ajaxget(1, "")
         setInterval(function () {
-            finde();
-        }, 60000);
+           /* ajaxget(N, sech)*/
+        }, 6000);
     });
-
     var finde = function search() {
         explorerSearch = $("#findData").val()
-        window.location.href = "/?explorerSearch=" + explorerSearch
+        ajaxget(1, explorerSearch)
     }
 
 
+</script>
+<script type="text/javascript">
+    function ajaxget(number, serch) {
+        var serchword = ""
+        var num = 1
+        if (serch.length > 0) {
+            serchword = serch
+            sech = serch
+        }
+        if (number > 1) {
+            num = number
+        }
+        url = "/getdata?page=" + num + "&explorerSearch=" + serchword
 
+        $.ajax({
+            type: "get",
+            async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: url,    //请求发送到TestServlet处
+            // data : {},
+            dataType: "json",        //返回数据形式为json
+            success: function (result) {
+                var datalist = $("#datalist")
+                datalist.html("")
+                for (i = result.data.length-1; i >0 ; i--) {
+
+                    var htmldata = htmlDatalist(result.data[i].data,result.data[i].number)
+                    datalist.append(htmldata)
+                }
+                num = parseInt(result.culpage)
+                N = num
+                PagerHtml(result.totalcount, 10, num, serch, 5)
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("获取数据失败!");
+            }
+        });
+    }
+
+    function htmlDatalist(data,number) {
+
+        var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" + ">" +
+                "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
+                "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">"+ number +"</a></span><br>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + ">2018-07-20 15:17:37 </span>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style="+"\""+"text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;"+"\""+ "title="+"\""+data+"\""+ ">" + data + "</span>" + "</div> </div>"
+        return htmllist
+    }
+
+    function PagerHtml(totalcount, page_size, curpage, mpurl, number) {
+        if (number % 2 == 0) {
+            $("#pagehtml").html("")
+            $("#pagehtml").append("请输入奇数")
+            return
+        }
+        var totalpage = 0
+        totalpage=Math.ceil(totalcount/page_size)
+        //如果返回为空，那就返回为空
+        if (totalcount == 0) {
+            $("#pagehtml").html("")
+
+            return ""
+        }
+
+        var html = ""
+        //如果返回的条数大于每页的条数才能产生分页
+        if (totalcount > page_size) {
+            html = "<ul class=" + "\"" + "pagination" + "\"" + ">" +
+                    "<li><a>" + totalcount + "条</a></li>" +
+                    "<li><a>" + totalpage + "页</a></li>"
+            if (curpage > 1) {
+                html = html +
+                        "<li>" +
+                        "<a onclick=" + "ajaxget" + "(" + (curpage - 1) + "," + "\"" + mpurl + "\"" + ")" + " aria-label=" + "\"" + "Previous" + "\"" + ">" +
+                        "<span aria-hidden=" + "\"" + "true" + "\"" + ">&laquo;</span>" +
+                        "</a> </li>"
+            }
+            if (totalpage <= number) {
+                for (i = 1; i <= totalpage; i++) {
+                    if (i == curpage) {
+                        html = html + "<li class=" + "\"" + "active" + "\"" + "><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                    } else {
+                        html = html + "<li><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                    }
+                }
+            } else {
+                if (curpage > 1) {
+                    if (curpage < totalpage) {
+                        var start = curpage - (number - 1) / 2
+                        var end = curpage + (number - 1) / 2
+                        var length = 0
+                        if (start < 1) {
+                            length = 1 - start
+                            start = 1
+                            if ((end + length) > totalpage) {
+                                length = length - ((end + length) - totalpage)
+                            }
+                        }
+                        if ((end + length) > totalpage) {
+                            length = length - ((end + length) - totalpage)
+                            if (length < 0) {
+                                start = start + length
+                            }
+                        }
+                        for (i = start; i <= end + length; i++) {
+                            if (i == curpage) {
+                                html = html + "<li class=" + "\"" + "active" + "\"" + "><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                            } else {
+                                html = html + "<li><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                            }
+                        }
+                    } else {
+                        for (i = curpage - number + 1; i <= curpage; i++) {
+                            if (i == curpage) {
+                                html = html + "<li class=" + "\"" + "active" + "\"" + "><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                            } else {
+                                html = html + "<li><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                            }
+                        }
+                    }
+                } else {
+                    for (i = curpage; i <= number; i++) {
+                        if (i == curpage) {
+                            html = html + "<li class=" + "\"" + "active" + "\"" + "><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                        } else {
+                            html = html + "<li><a onclick=" + "ajaxget" + "(" + i + "," + "\"" + mpurl + "\"" + ")" + " >" + i + "</a></li>"
+                        }
+                    }
+                }
+            }
+            if (curpage < totalpage) {
+                html = html +
+                        "<li>" +
+                        "<a onclick=" + "ajaxget" + "(" + (curpage + 1) + "," + "\"" + mpurl + "\"" + ")" + " aria-label=" + "\"" + "Next" + "\"" + ">" +
+                        "<span aria-hidden=" + "\"" + "true" + "\"" + ">&raquo;</span>" +
+                        "</a> </li>"
+            }
+            html = html + "</ul> </nav>"
+        }
+        $("#pagehtml").html("")
+        $("#pagehtml").append(html)
+    }
 
 </script>
 </html>

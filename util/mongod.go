@@ -4,7 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
-	"redfind/models"
+	"lian/models"
 )
 
 var sessionMap map[string]*mgo.Session = map[string]*mgo.Session{}
@@ -291,7 +291,7 @@ func (m *MongoModel) query(c *mgo.Collection) *mgo.Query {
 
 func D(name string, params ...P) (m *MongoModel) {
 	dbhost := "127.0.0.1"
-	db := "db"
+	db := "chengyanfeng"
 	m = &MongoModel{Cname: name}
 	if len(params) < 1 {
 		p := P{"host": dbhost, "timeout": 10}

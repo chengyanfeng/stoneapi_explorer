@@ -2,24 +2,29 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"redfind/util"
+	"lian/util"
 )
 
 type BaseController struct {
 	beego.Controller
 }
 
-func (this *BaseController) Prepare() {
-	this.LayoutSections = make(map[string]string)
-	this.LayoutSections["HtmlHead"] = "tpl/header.html"
-	this.Layout="home.html"
+func (c *BaseController) Prepare() {
+	c.LayoutSections = make(map[string]string)
+	c.LayoutSections["HtmlHead"] = "tpl/header.html"
+	c.Layout = "home.html"
 }
 
 func PagerHtml(totalcount int, page_size int, curpage int, mpurl string, number int) string {
 	if number%2 == 0 {
 		return "请输入为奇数的页码数"
 	}
-	totalpage := (totalcount / page_size) + 1
+	totalpage := 0
+	if totalcount%page_size > 0 {
+		totalpage = (totalcount / page_size) + 1
+	} else {
+		totalpage = (totalcount / page_size)
+	}
 	//如果返回为空，那就返回为空
 	if totalcount == 0 {
 		return ""
