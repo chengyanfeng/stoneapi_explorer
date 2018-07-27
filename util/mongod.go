@@ -128,10 +128,6 @@ func (m *MongoModel) Sort(s string) *MongoModel {
 	return m
 }
 
-
-
-
-
 func (m *MongoModel) Count() (total int) {
 	m.Run(m.Cname, func(c *mgo.Collection) {
 		q := m.query(c)
@@ -214,7 +210,6 @@ func (m *MongoModel) RemoveAll() (e error) {
 	return
 }
 
-
 func (m *MongoModel) One() (r *P) {
 	cacheKey := Md5(m.ToString(), "One")
 	if m.C > 0 {
@@ -249,8 +244,6 @@ func (m *MongoModel) Explain() (result interface{}) {
 	return p
 }
 
-
-
 func (m *MongoModel) All() (r *[]P) {
 	r = &[]P{}
 	m.Run(m.Cname, func(c *mgo.Collection) {
@@ -269,13 +262,12 @@ func (m *MongoModel) AllData() (r *[]models.Node) {
 	return
 }
 func (m *MongoModel) query(c *mgo.Collection) *mgo.Query {
-	q:=&mgo.Query{}
-	if len(*m.Query)==0{
+	q := &mgo.Query{}
+	if len(*m.Query) == 0 {
 		q = c.Find(nil).Skip(m.Start)
-	}else {
+	} else {
 		q = c.Find(m.Query).Skip(m.Start)
 	}
-
 
 	if m.Rows > 0 {
 		q = q.Limit(m.Rows)
@@ -291,7 +283,7 @@ func (m *MongoModel) query(c *mgo.Collection) *mgo.Query {
 
 func D(name string, params ...P) (m *MongoModel) {
 	dbhost := "127.0.0.1"
-	db := "chengyanfeng"
+	db := "db"
 	m = &MongoModel{Cname: name}
 	if len(params) < 1 {
 		p := P{"host": dbhost, "timeout": 10}
@@ -302,8 +294,6 @@ func D(name string, params ...P) (m *MongoModel) {
 	m.cfg = &p
 	return
 }
-
-
 
 func ToOid(id string) (oid bson.ObjectId) {
 	if bson.IsObjectIdHex(id) {
