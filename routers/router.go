@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"lian/controllers"
+	"stoneapi_explorer/controllers"
 	"github.com/astaxie/beego"
 )
 

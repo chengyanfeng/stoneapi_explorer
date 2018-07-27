@@ -4,7 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"time"
-	"lian/models"
+	"stoneapi_explorer/models"
 )
 
 var sessionMap map[string]*mgo.Session = map[string]*mgo.Session{}

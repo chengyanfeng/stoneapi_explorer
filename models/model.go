@@ -8,3 +8,10 @@ type Node struct {
 	__v     string `bson:"__v";`
 	Number  int    `json:"number"`
 }
+
+const (
+	Mongodburl =""
+	Mongodbuser = ""
+	Mongodbpass = ""
+	Mongodbdb   = ""
+)

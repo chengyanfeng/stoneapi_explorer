@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"lian/util"
-	"lian/models"
+	"stoneapi_explorer/util"
+	"stoneapi_explorer/models"
+
 )
 
 type MainController struct {
@@ -30,7 +31,8 @@ func (c *MainController) Getdata() {
 	} else {
 		delete(queryp, "data")
 	}
-	totalcount := util.D("uploads").Find(queryp).Count()
+
+	totalcount := util.D("uploads",mongp).Find(queryp).Count()
 	datalist := util.D("uploads").Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
 
 	for k, v := range *datalist {
