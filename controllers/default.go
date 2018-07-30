@@ -20,6 +20,8 @@ func (c *MainController) Get() {
 
 //获取数据分页
 func (c *MainController) Getdata() {
+	docm := mongp["docm"]
+	docm2string := util.ToString(docm)
 	page_size := 10
 	reurnDataList := &[]models.Node{}
 	datalist := &[]models.Node{}
@@ -35,16 +37,17 @@ func (c *MainController) Getdata() {
 	} else {
 		delete(queryp, "data")
 	}
-	totalcount := util.D("uploads", mongp).Find(queryp).Count()
+
+	totalcount := util.D(docm2string, mongp).Find(queryp).Count()
 	a := math.Ceil(util.ToFloat(totalcount) / util.ToFloat(page_size))
 	fmt.Print(a)
 	if curlpage < util.ToInt(math.Ceil(util.ToFloat(totalcount)/util.ToFloat(page_size))) {
-		datalist = util.D("uploads", mongp).Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
+		datalist = util.D(docm2string, mongp).Find(queryp).Page(totalcount-(curlpage)*page_size, page_size).AllData()
 	} else {
 		if totalcount%page_size == 0 {
-			datalist = util.D("uploads", mongp).Find(queryp).Page(0, page_size).AllData()
+			datalist = util.D(docm2string, mongp).Find(queryp).Page(0, page_size).AllData()
 		} else {
-			datalist = util.D("uploads", mongp).Find(queryp).Page(0, (totalcount % page_size)).AllData()
+			datalist = util.D(docm2string, mongp).Find(queryp).Page(0, (totalcount % page_size)).AllData()
 		}
 	}
 
@@ -54,7 +57,6 @@ func (c *MainController) Getdata() {
 			number = number + page_size - 1
 		}
 		v.Number = number
-
 		*reurnDataList = append(*reurnDataList, v)
 	}
 	c.Data["json"] = map[string]interface{}{"totalcount": totalcount, "data": reurnDataList, "culpage": page}
