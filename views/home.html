@@ -166,7 +166,7 @@
         ajaxget(1, "")
         setInterval(function () {
             ajaxget(N, "")
-        }, 60000);
+        }, 600000);
     });
     var finde = function search() {
         explorerSearch = $("#findData").val()
@@ -245,10 +245,10 @@
     function htmlDatalist(data, number, txids) {
 
         var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" +"style="+"\""+"border-left:#337ab7 2px solid !important;"+"\""+ ">" +
-                "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
+                "<div class=" + "\"" + "col-sm-12" + "\"" +"style=" + "\"" + "text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;" + "\""+ ">" +
                 "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">" + number + "</a></span><br>" +
                 "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style=" + "\"" + "text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;" + "\"" + "title=" + "\"" + data + "\"" + ">" +"<a>"+ data +"</a>"+ "</span>" + "</div> </div>"
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\""  + "title=" + "\"" + data + "\"" + ">" +"<a>"+ data +"</a>"+ "</span>" + "</div> </div>"
         return htmllist
     }
     function PagerHtml(totalcount, page_size, curpage, mpurl, number) {
