@@ -11,12 +11,12 @@ type BaseController struct {
 
 var mongp = util.P{}
 
-func init(){
+func init() {
 	mongp["host"] = beego.AppConfig.String("mongodburl")
 	mongp["name"] = beego.AppConfig.String("mongodbdb")
 	mongp["username"] = beego.AppConfig.String("mongodbuser")
 	mongp["password"] = beego.AppConfig.String("mongodbpass")
-	mongp["docm"]=beego.AppConfig.String("mongodbdocm")
+	mongp["docm"] = beego.AppConfig.String("mongodbdocm")
 }
 
 func (c *BaseController) Prepare() {

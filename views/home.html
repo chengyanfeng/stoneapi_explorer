@@ -18,7 +18,7 @@
                         <!-- BEGIN LOGO -->
                         <div class="page-logo">
                             <a href="/">
-                               {{/* <img ng-show="settings.logo" src="/static/img1/explorer-logo.png" alt="logo"
+                            {{/* <img ng-show="settings.logo" src="/static/img1/explorer-logo.png" alt="logo"
                                      class="logo-default">*/}}
                             </a>
                         </div>
@@ -58,7 +58,7 @@
 
                         <!-- BEGIN MEGA MENU -->
                         <div class="hor-menu hor-menu-light">
-{{/*
+                        {{/*
                             <ul class="nav navbar-nav">
                                 <li class="active">
                                     <a href="/">主页</a>
@@ -94,7 +94,8 @@
                 <div class="page-content">
                     <div class="container">
                         <div ui-view="" class="fade-in-up ng-scope">
-                            <span class="todo-tasklist-date ng-binding" style="margin-left: 13%;color:#337ab7 !important">TXIDS请以逗号分隔</span>
+                            <span class="todo-tasklist-date ng-binding"
+                                  style="margin-left: 13%;color:#337ab7 !important">TXIDS请以逗号分隔</span>
                             <div class="row ng-scope">
 
                                 <form name="form" class="search-form ng-pristine ng-valid"
@@ -131,8 +132,9 @@
                                     <div class="portlet light">
                                         <div class="portlet-title">
                                             <div class="caption caption-md">
-                                                <i  style="color:#337ab7" class="fa fa-cubes "></i>
-                                                <span class="caption-subject  bold uppercase" style="color:#337ab7">区块</span>
+                                                <i style="color:#337ab7" class="fa fa-cubes "></i>
+                                                <span class="caption-subject  bold uppercase"
+                                                      style="color:#337ab7">区块</span>
                                             </div>
                                             <div class="actions">
                                                 <div class="btn-group">
@@ -174,7 +176,7 @@
     }
     var findeData = function searchGet() {
         var txids = $("#findDataText").val().trim().split(",")
-        if (txids.length<=0){
+        if (txids.length <= 0) {
             alert("请输入多个txids")
         }
         var data = {
@@ -221,6 +223,7 @@
             }
         });
     }
+
     function ajaxPost(data) {
 
         $.ajax({
@@ -230,7 +233,7 @@
             data: data,
             dataType: "json",        //返回数据形式为json
             success: function (result) {
-                if (result.code!=0){
+                if (result.code != 0) {
                     alert("请求失败，请检查txids")
                     return
                 }
@@ -242,15 +245,17 @@
             }
         });
     }
+
     function htmlDatalist(data, number, txids) {
 
-        var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" +"style="+"\""+"border-left:#337ab7 2px solid !important;"+"\""+ ">" +
+        var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" + "style=" + "\"" + "border-left:#337ab7 2px solid !important;" + "\"" + ">" +
                 "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
                 "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">" + number + "</a></span><br>" +
                 "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding cyf" + "\"" +"style=" + "\"" + "" +  + "title=" + "\"" + data + "\"" + ">" +"<a>"+ data +"</a>"+ "</span>" + "</div> </div>"
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding cyf" + "\"" + "style=" + "\"" + "" + +"title=" + "\"" + data + "\"" + ">" + "<a>" + data + "</a>" + "</span>" + "</div> </div>"
         return htmllist
     }
+
     function PagerHtml(totalcount, page_size, curpage, mpurl, number) {
         if (number % 2 == 0) {
             $("#pagehtml").html("")
