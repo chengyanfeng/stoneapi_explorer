@@ -49,7 +49,12 @@ func (c *MainController) Getdata() {
 	}
 
 	for k, v := range *datalist {
-		v.Number = (totalcount - (curlpage)*page_size + k + 1)
+		number := (totalcount - (curlpage)*page_size + k + 1)
+		if number < 0 {
+			number = number + page_size - 1
+		}
+		v.Number = number
+
 		*reurnDataList = append(*reurnDataList, v)
 	}
 	c.Data["json"] = map[string]interface{}{"totalcount": totalcount, "data": reurnDataList, "culpage": page}
