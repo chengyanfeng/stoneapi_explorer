@@ -58,6 +58,7 @@
 
                         <!-- BEGIN MEGA MENU -->
                         <div class="hor-menu hor-menu-light">
+{{/*
                             <ul class="nav navbar-nav">
                                 <li class="active">
                                     <a href="/">主页</a>
@@ -65,6 +66,7 @@
 
 
                             </ul>
+*/}}
                         </div>
                         <!-- END MEGA MENU -->
                     </div>
@@ -92,7 +94,7 @@
                 <div class="page-content">
                     <div class="container">
                         <div ui-view="" class="fade-in-up ng-scope">
-                            <span class="todo-tasklist-date ng-binding" style="margin-left: 13%;">TXIDS请以逗号分隔</span>
+                            <span class="todo-tasklist-date ng-binding" style="margin-left: 13%;color:#337ab7 !important">TXIDS请以逗号分隔</span>
                             <div class="row ng-scope">
 
                                 <form name="form" class="search-form ng-pristine ng-valid"
@@ -101,10 +103,10 @@
                                         <textarea type="text" name="explorerSearch" id="findDataText"
                                                   class="form-control "
                                                   placeholder="搜索txdis，多个请以逗号分隔"
-                                                  style="height:200px;resize:none;overflow:scroll">
+                                                  style="height:200px;resize:none;overflow:scroll;border-color:#337ab7 !important">
                                         </textarea>
                                         <span class="input-group-btn">
-                                <a class="btn searchIcon" onclick="findeData()">
+                                <a class="btn" onclick="findeData()">
                                     查询
                                     <i class="glyphicon glyphicon-arrow-right"></i>
                                 </a>
@@ -120,7 +122,7 @@
                                            placeholder="搜索  Address / Txhash / BlockNum / BlockHash"
                                            ng-model="form.searchInput"
                                            ng-keyup="$event.keyCode == 13 ? searchQuery(form.searchInput) : null"
-                                           style="height:200px;resize:none;">
+                                           style="height:200px;resize:none;border-color:#337ab7 !important">
                                         </a>
 
                                     </div>
@@ -129,8 +131,8 @@
                                     <div class="portlet light">
                                         <div class="portlet-title">
                                             <div class="caption caption-md">
-                                                <i class="fa fa-cubes font-red"></i>
-                                                <span class="caption-subject font-red bold uppercase">区块</span>
+                                                <i  style="color:#337ab7" class="fa fa-cubes "></i>
+                                                <span class="caption-subject  bold uppercase" style="color:#337ab7">区块</span>
                                             </div>
                                             <div class="actions">
                                                 <div class="btn-group">
@@ -172,6 +174,9 @@
     }
     var findeData = function searchGet() {
         var txids = $("#findDataText").val().trim().split(",")
+        if (txids.length<=0){
+            alert("请输入多个txids")
+        }
         var data = {
             "txids": txids
         }
@@ -225,7 +230,10 @@
             data: data,
             dataType: "json",        //返回数据形式为json
             success: function (result) {
-                console.log(result.data.data)
+                if (result.code!=0){
+                    alert("请求失败，请检查txids")
+                    return
+                }
                 $("#showData").html(result.data.confirmations + "</br>" + result.data.data + "</br>" + result.data.time)
             },
             error: function (errorMsg) {
@@ -236,11 +244,11 @@
     }
     function htmlDatalist(data, number, txids) {
 
-        var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" + ">" +
+        var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" +"style="+"\""+"border-left:#337ab7 2px solid !important;"+"\""+ ">" +
                 "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
                 "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">" + number + "</a></span><br>" +
                 "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style=" + "\"" + "text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;" + "\"" + "title=" + "\"" + data + "\"" + ">" + data + "</span>" + "</div> </div>"
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "style=" + "\"" + "text-overflow:ellipsis;overflow:hidden;display:block;white-space:nowrap;" + "\"" + "title=" + "\"" + data + "\"" + ">" +"<a>"+ data +"</a>"+ "</span>" + "</div> </div>"
         return htmllist
     }
     function PagerHtml(totalcount, page_size, curpage, mpurl, number) {
