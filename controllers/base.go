@@ -8,12 +8,14 @@ import (
 type BaseController struct {
 	beego.Controller
 }
- var mongp=util.P{}
+
+var mongp = util.P{}
+
 func (c *BaseController) Prepare() {
-	mongp["host"]=beego.AppConfig.String("mongodburl")
-	mongp["name"]=beego.AppConfig.String("mongodbdb")
-	mongp["username"]=beego.AppConfig.String("mongodbuser")
-	mongp["password"]=beego.AppConfig.String("mongodbpass")
+	mongp["host"] = beego.AppConfig.String("mongodburl")
+	mongp["name"] = beego.AppConfig.String("mongodbdb")
+	mongp["username"] = beego.AppConfig.String("mongodbuser")
+	mongp["password"] = beego.AppConfig.String("mongodbpass")
 	c.LayoutSections = make(map[string]string)
 	c.LayoutSections["HtmlHead"] = "tpl/header.html"
 	c.Layout = "home.html"
