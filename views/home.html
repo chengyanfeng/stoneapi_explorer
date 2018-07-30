@@ -3,12 +3,9 @@
 {{ .HtmlHead}}
 <body ng-controller="MainController" class="page-header-fixed ng-scope"
       ng-class="{'page-content-white': settings.layout.pageContentWhite,'page-container-bg-solid': settings.layout.pageBodySolid}">
-<!-- BEGIN PAGE SPINNER -->
 <div ng-spinner-bar="" class="page-spinner-bar hide">
     <img src="/img/loading.gif">
 </div>
-<!-- END PAGE SPINNER -->
-<!-- BEGIN HEADER -->
 <div class="page-wrapper">
     <div class="page-wrapper-row">
         <div class="page-wrapper-top">
@@ -166,7 +163,7 @@
     $(function () {
         ajaxget(1, "")
         setInterval(function () {
-            ajaxget(1, "")
+            ajaxget(N, "")
         }, 60000);
     });
     var finde = function search() {
@@ -204,7 +201,7 @@
             success: function (result) {
                 var datalist = $("#datalist")
                 datalist.html("")
-                for (i = result.data.length - 1; i > 0; i--) {
+                for (i = result.data.length - 1; i >= 0; i--) {
                     var arr = result.data[i].TxIds.split(',');
                     var htmldata = htmlDatalist(result.data[i].data, result.data[i].number, arr[0])
                     datalist.append(htmldata)
