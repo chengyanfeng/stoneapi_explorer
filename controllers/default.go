@@ -53,8 +53,8 @@ func (c *MainController) Getdata() {
 
 	for k, v := range *datalist {
 		number := (totalcount - (curlpage)*page_size + k + 1)
-		if number < 0 {
-			number = number + page_size - 1
+		if (curlpage)*page_size > totalcount {
+			number = (k+1)
 		}
 		v.Number = number
 		*reurnDataList = append(*reurnDataList, v)

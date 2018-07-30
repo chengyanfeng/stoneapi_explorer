@@ -134,7 +134,7 @@
                                             <div class="caption caption-md">
                                                 <i style="color:#337ab7" class="fa fa-cubes "></i>
                                                 <span class="caption-subject  bold uppercase"
-                                                      style="color:#337ab7">区块</span>
+                                                      style="color:#337ab7">数据上传记录</span>
                                             </div>
                                             <div class="actions">
                                                 <div class="btn-group">
@@ -210,7 +210,7 @@
                 datalist.html("")
                 for (i = result.data.length - 1; i >= 0; i--) {
                     var arr = result.data[i].TxIds.split(',');
-                    var htmldata = htmlDatalist(result.data[i].data, result.data[i].number, arr[0])
+                    var htmldata = htmlDatalist(result.data[i].data, result.data[i].number, arr[0],result.data[i].Created)
                     datalist.append(htmldata)
                 }
                 num = parseInt(result.culpage)
@@ -246,12 +246,13 @@
         });
     }
 
-    function htmlDatalist(data, number, txids) {
+    function htmlDatalist(data, number, txids,date) {
 
         var htmllist = " <div class=" + "\"" + "todo-tasklist-item item-border-green row ng-scope" + "\"" + "style=" + "\"" + "border-left:#337ab7 2px solid !important;" + "\"" + ">" +
                 "<div class=" + "\"" + "col-sm-12" + "\"" + ">" +
                 "<span class=" + "\"" + "todo-tasklist-item-title" + "\"" + "><a class=" + "\"" + "ng-binding" + "\"" + ">" + number + "</a></span><br>" +
-                "<span class=" + "\"" + "todo-tasklist-date ng-binding" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding col-sm-9" + "\"" + "href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + ">" + "<a href=" + "\"" + "https://block.genyuanlian.com/tx/" + txids + "\"" + " >" + txids + "..." + "</a></span>" +
+                "<span class=" + "\"" + "todo-tasklist-date ng-binding"+ "\""+">"+date+"</span>"+
                 "<span class=" + "\"" + "todo-tasklist-date ng-binding cyf" + "\"" + "style=" + "\"" + "" + +"title=" + "\"" + data + "\"" + ">" + "<a>" + data + "</a>" + "</span>" + "</div> </div>"
         return htmllist
     }
